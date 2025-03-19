@@ -1,48 +1,39 @@
-pipeline
-{
-	agent any
-		tools
-		{
-			maven 'MAVEN_HOME'
-		}
-		stages
-		{
-			stage('Welcome Stage')
-			{
-				steps
-				{
-					echo 'Welcome to Pipeline'
-				}
-			}
-			
-			stage('Clean Stage')
-			{
-				steps
-				{
-					bat 'mvn clean'
-				}
-			}
-			stage('Build Stage')
-			{
-				steps
-				{
-					bat 'mvn install'
-				}
-			}
-			stage('Build Success')
-			{
-				steps
-				{
-					echo 'Build Success'
-				}
-			}
-			stage('Finish Stage')
-			{
-				steps
-				{
-					echo 'Finish Stage'
-				}
-			}
-			
-		}
+pipeline {
+    agent any
+    stages {
+        stage('Checkout') {
+            steps {
+                // Checkout your source code from version control
+                git 'https://github.com/jahesh2003/SL-MAVEN-8-FEB-BACTH.git'
+            }
+        }
+        stage('Build') {
+            steps {
+                // Use Maven to build your project
+                sh 'mvn clean package'
+            }
+        }
+        stage('Test') {
+            steps {
+                // Run tests if applicable
+                sh 'mvn test'
+            }
+        }
+        stage('Deploy') {
+            steps {
+                // Deploy your artifact, if necessary
+                // Example: sh 'mvn deploy'
+            }
+        }
+    }
+    post {
+        success {
+            // This block will be executed if the pipeline runs successfully
+            echo 'Pipeline executed successfully!'
+        }
+        failure {
+            // This block will be executed if the pipeline fails
+            echo 'Pipeline failed!'
+        }
+    }
 }
